@@ -30,7 +30,7 @@ public class PermissionActivity extends AppCompatActivity {
     static PermissionHandler permissionHandler;
 
     private ArrayList<String> allPermissions, deniedPermissions, noRationaleList;
-    private Options options;
+    private PermissionMessages permissionMessages;
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
@@ -45,9 +45,9 @@ public class PermissionActivity extends AppCompatActivity {
 
         getWindow().setStatusBarColor(0);
         allPermissions = (ArrayList<String>) intent.getSerializableExtra(EXTRA_PERMISSIONS);
-        options = (Options) intent.getSerializableExtra(EXTRA_OPTIONS);
-        if (options == null) {
-            options = new Options();
+        permissionMessages = (PermissionMessages) intent.getSerializableExtra(EXTRA_OPTIONS);
+        if (permissionMessages == null) {
+            permissionMessages = new PermissionMessages();
         }
         deniedPermissions = new ArrayList<>();
         noRationaleList = new ArrayList<>();
@@ -91,7 +91,7 @@ public class PermissionActivity extends AppCompatActivity {
                 }
             }
         };
-        new AlertDialog.Builder(this).setTitle(options.getRationaleDialogTitle())
+        new AlertDialog.Builder(this).setTitle(permissionMessages.getRationaleDialogTitle())
                 .setMessage(rationale)
                 .setPositiveButton(android.R.string.ok, listener)
                 .setNegativeButton(android.R.string.cancel, listener)
@@ -159,14 +159,14 @@ public class PermissionActivity extends AppCompatActivity {
     }
 
     private void sendToSettings() {
-        if (!options.getSendBlockedToSettings()) {
+        if (!permissionMessages.getSendBlockedToSettings()) {
             deny();
             return;
         }
         AppPermission.log("Ask to go to settings.");
-        new AlertDialog.Builder(this).setTitle(options.getSettingsDialogTitle())
-                .setMessage(options.getSettingsDialogMessage())
-                .setPositiveButton(options.getSettingsText(), new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(this).setTitle(permissionMessages.getSettingsDialogTitle())
+                .setMessage(permissionMessages.getSettingsDialogMessage())
+                .setPositiveButton(permissionMessages.getSettingsText(), new DialogInterface.OnClickListener() {
                     @Override
                     @SuppressWarnings("InlinedAPI")
                     public void onClick(DialogInterface dialog, int which) {
@@ -193,7 +193,7 @@ public class PermissionActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == RC_SETTINGS && permissionHandler != null) {
-            AppPermission.check(this, toArray(allPermissions), null, options,
+            AppPermission.check(this, toArray(allPermissions), null, permissionMessages,
                     permissionHandler);
         }
         // super, because overridden method will make the handler null, and we don't want that.
@@ -239,12 +239,12 @@ public class PermissionActivity extends AppCompatActivity {
         noRationaleList = null;
     }
 
-    public static Intent onNewIntent(Context context, ArrayList<String> permissionList, Options options, String rationale){
+    public static Intent onNewIntent(Context context, ArrayList<String> permissionList, PermissionMessages permissionMessages, String rationale){
         Intent intent = new Intent(context, PermissionActivity.class)
                 .putExtra(EXTRA_PERMISSIONS, permissionList)
                 .putExtra(EXTRA_RATIONALE, rationale)
-                .putExtra(EXTRA_OPTIONS, options);
-        if (options != null && options.getCreateNewTask()) {
+                .putExtra(EXTRA_OPTIONS, permissionMessages);
+        if (permissionMessages != null && permissionMessages.getCreateNewTask()) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
 

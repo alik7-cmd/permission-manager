@@ -1,11 +1,9 @@
 package com.techascent.permissionmanager
 
-import android.os.Parcel
-import android.os.Parcelable
 import java.io.Serializable
 
 
-data class Options(
+data class PermissionMessages(
 
     var settingsText: String = "Settings",
     var rationaleDialogTitle: String = "Permissions Required",
