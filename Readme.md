@@ -1,4 +1,4 @@
-# PermissionManager
+# permission-manager
 Android runtime permissions were introduced in Android 6.0. Obviously it's a good thing to have as an user, but this can give nightmare to the developer if its not handled properly.
 This Library reduces the complexity of handling repetative or multiple permissions in runtime.
 
@@ -23,11 +23,11 @@ dependencies {
 }
 ```
 
-Thats it! You are all set to use the library.
+That's it! You are all set to use the library.
 
 ## How to use it
 
-Pretty easy! Just add below code if you need multiple permission to ask at the same time.
+Pretty easy! Just add below code if you need multiple permissions to ask at the same time.
 
 ``` kotlin
 private val listOfPermissions: Array<String> =
@@ -81,3 +81,5 @@ PermissionManager.check(this, Manifest.permission.CAMERA, null ,object : Permiss
 
         })
 ```
+
+HOLA!! It's too easy to use and saves you to write from a lot of boilerplate codes. So enjoy.  
