@@ -1,0 +1,4 @@
+<resources>
+    <string name="permission_manager_text_ok">OK</string>
+    <string name="permission_manager_text_cancel">Cancel</string>
+</resources>

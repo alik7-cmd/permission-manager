@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Permission Manager</string>
+    <string name="text_ok">OK</string>
+    <string name="text_cancel">Cancel</string>
+</resources>
