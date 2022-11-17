@@ -60,7 +60,7 @@ object AppPermission {
         context: Context,
         permissions: Array<String>,
         rationaleId: Int?,
-        option: Options?,
+        option: PermissionMessages?,
         handler: PermissionHandler?
     ) {
         val rationale: String? = try {
@@ -76,7 +76,7 @@ object AppPermission {
         context: Context,
         permissions: Array<String>,
         rationale: String?,
-        option: Options?,
+        option: PermissionMessages?,
         handler: PermissionHandler?
     ) {
         if (Build.VERSION.SDK_INT < 23) {
