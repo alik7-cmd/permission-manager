@@ -10,7 +10,7 @@ import android.widget.Toast
 class HomeActivity : AppCompatActivity() {
 
 
-    val listOfPermission: Array<String> =
+    private val listOfPermission: Array<String> =
         arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,7 +24,7 @@ class HomeActivity : AppCompatActivity() {
 
 
     private fun takeMultiplePermission(){
-        AppPermission.check(this,listOfPermission , null, null, object : PermissionHandler(){
+        PermissionManager.check(this,listOfPermission , null, null, object : PermissionHandler(){
             override fun onPermissionGranted() {
                 Toast.makeText(this@HomeActivity, "Granted", Toast.LENGTH_SHORT).show()
             }
@@ -34,16 +34,43 @@ class HomeActivity : AppCompatActivity() {
                 listOfDeniedPermission: List<String>
             ) {
                 super.onPermissionDenied(context, listOfDeniedPermission)
+                // Do whatever you want to do
             }
 
             override fun onPermissionBlocked(
                 context: Context,
                 listOfBlockedPermission: List<String>
             ): Boolean {
+                // Do whatever you want to do
                 return super.onPermissionBlocked(context, listOfBlockedPermission)
             }
 
         })
 
+    }
+
+    private fun takeSinglePermission(){
+        PermissionManager.check(this, Manifest.permission.CAMERA, null ,object : PermissionHandler(){
+            override fun onPermissionGranted() {
+                // Do whatever you want to do
+            }
+
+            override fun onPermissionBlocked(
+                context: Context,
+                listOfBlockedPermission: List<String>
+            ): Boolean {
+                // Do whatever you want to do
+                return super.onPermissionBlocked(context, listOfBlockedPermission)
+            }
+
+            override fun onPermissionDenied(
+                context: Context,
+                listOfDeniedPermission: List<String>
+            ) {
+                // Do whatever you want to do
+                super.onPermissionDenied(context, listOfDeniedPermission)
+            }
+
+        })
     }
 }

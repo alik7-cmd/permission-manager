@@ -18,7 +18,7 @@ abstract class PermissionHandler {
                 builder.append(" ")
                 builder.append(permission)
             }
-            AppPermission.log(builder.toString())
+            PermissionManager.log(builder.toString())
         }
     }
 
@@ -30,7 +30,7 @@ abstract class PermissionHandler {
                 builder.append(" ")
                 builder.append(permission)
             }
-            AppPermission.log(builder.toString())
+            PermissionManager.log(builder.toString())
         }
         return false
     }
@@ -47,7 +47,7 @@ abstract class PermissionHandler {
                 builder.append(" ")
                 builder.append(permission)
             }
-            AppPermission.log(builder.toString())
+            PermissionManager.log(builder.toString())
         }
         onPermissionDenied(context, listOfDeniedPermission)
     }

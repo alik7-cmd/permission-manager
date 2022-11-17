@@ -71,10 +71,10 @@ public class PermissionActivity extends AppCompatActivity {
 
         String rationale = intent.getStringExtra(EXTRA_RATIONALE);
         if (noRationale || TextUtils.isEmpty(rationale)) {
-            AppPermission.log("No rationale.");
+            PermissionManager.log("No rationale.");
             requestPermissions(toArray(deniedPermissions), RC_PERMISSION);
         } else {
-            AppPermission.log("Show rationale.");
+            PermissionManager.log("Show rationale.");
             showRationale(rationale);
         }
     }
@@ -119,7 +119,7 @@ public class PermissionActivity extends AppCompatActivity {
                 }
             }
             if (deniedPermissions.size() == 0) {
-                AppPermission.log("Just allowed.");
+                PermissionManager.log("Just allowed.");
                 grant();
             } else {
                 ArrayList<String> blockedList = new ArrayList<>(); //set not to ask again.
@@ -163,7 +163,7 @@ public class PermissionActivity extends AppCompatActivity {
             deny();
             return;
         }
-        AppPermission.log("Ask to go to settings.");
+        PermissionManager.log("Ask to go to settings.");
         new AlertDialog.Builder(this).setTitle(permissionMessages.getSettingsDialogTitle())
                 .setMessage(permissionMessages.getSettingsDialogMessage())
                 .setPositiveButton(permissionMessages.getSettingsText(), new DialogInterface.OnClickListener() {
@@ -193,7 +193,7 @@ public class PermissionActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == RC_SETTINGS && permissionHandler != null) {
-            AppPermission.check(this, toArray(allPermissions), null, permissionMessages,
+            PermissionManager.check(this, toArray(allPermissions), null, permissionMessages,
                     permissionHandler);
         }
         // super, because overridden method will make the handler null, and we don't want that.

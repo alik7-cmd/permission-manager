@@ -7,7 +7,7 @@ import android.os.Build
 import android.util.Log
 import java.util.*
 
-object AppPermission {
+object PermissionManager {
 
     var isLoggingEnabled = true
 
@@ -32,7 +32,7 @@ object AppPermission {
     fun check(
         context: Context,
         permission: String,
-        rationale: String,
+        rationale: String?,
         handler: com.techascent.permissionmanager.PermissionHandler
     ) {
         val permissions = arrayOf(permission)
