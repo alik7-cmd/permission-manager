@@ -42,7 +42,6 @@ PermissionManager.check(this,listOfPermission , null, null, object : PermissionH
                 context: Context,
                 listOfDeniedPermission: List<String>
             ) {
-                super.onPermissionDenied(context, listOfDeniedPermission)
                 // Do whatever you want to do
             }
 
@@ -78,7 +77,6 @@ PermissionManager.check(this, Manifest.permission.CAMERA, null ,object : Permiss
                 listOfDeniedPermission: List<String>
             ) {
                 // Do whatever you want to do
-                super.onPermissionDenied(context, listOfDeniedPermission)
             }
 
         })
