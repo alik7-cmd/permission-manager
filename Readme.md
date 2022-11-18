@@ -19,7 +19,7 @@ Add the dependency
 
 ```
 dependencies {
-        implementation 'com.github.alik7-cmd:permission-manager:1.2.5'
+        implementation 'com.github.alik7-cmd:permission-manager:1.2.6'
 }
 ```
 
