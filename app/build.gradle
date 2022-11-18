@@ -7,7 +7,7 @@ android {
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.techascent.permissionmanager"
+        applicationId "com.techascent.example"
         minSdk 21
         targetSdk 32
         versionCode 1
