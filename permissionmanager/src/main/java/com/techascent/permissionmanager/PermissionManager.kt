@@ -23,28 +23,42 @@ object PermissionManager {
     }
 
     /**
-     * @param context     the android context
-     * @param permission  requested permission
-     * @param rationale   message to show the user, why this permission is important.
-     * @param handler
+     * Check/Request Permissions and triggers the handler method properly.
+     *
+     * @param context     the android context.
+     * @param permission  list of requested permissions.
+     * @param rationale   an explanation message to shown the user explaining why this permission is necessary.
+     *                    if s/he denied the permission earlier.
+     * @param handler     a handler object of type [PermissionHandler] to handle different user action like permissions grant,
+     *                    permissions denied and permissions blocked.
      */
     @JvmStatic
     fun check(
         context: Context,
         permission: String,
         rationale: String?,
-        handler: com.techascent.permissionmanager.PermissionHandler
+        handler: PermissionHandler
     ) {
         val permissions = arrayOf(permission)
         check(context, permissions, rationale, null, handler)
     }
 
+    /**
+     * Check/Request Permission and triggers the handler method properly.
+     *
+     * @param context      the android context.
+     * @param permission   requested permissions.
+     * @param rationaleId  a string id of an explanation message to shown the user explaining why this permission is necessary.
+     *                     if s/he denied the permission earlier.
+     * @param handler      a handler object of type [PermissionHandler] to handle different user action like permissions grant,
+     *                     permissions denied and permissions blocked.
+     */
     @JvmStatic
     fun check(
         context: Context,
         permission: String,
         rationaleId: Int,
-        handler: com.techascent.permissionmanager.PermissionHandler
+        handler: PermissionHandler
     ) {
         val rationale: String? = try {
             context.getString(rationaleId)
@@ -55,6 +69,17 @@ object PermissionManager {
         check(context, permissions, rationale, null, handler)
     }
 
+    /**
+     * Check/Request Permissions and triggers the handler method properly.
+     *
+     * @param context      the android context.
+     * @param permissions  list of requested permissions.
+     * @param rationaleId  a string id of an explanation message to shown the user explaining why this permission is necessary.
+     *                     if s/he denied the permission earlier.
+     * @param option       message option for handling permissions.
+     * @param handler      a handler object of type [PermissionHandler] to handle different user action like permissions grant,
+     *                     permissions denied and permissions blocked.
+     */
     @JvmStatic
     fun check(
         context: Context,
@@ -71,6 +96,17 @@ object PermissionManager {
         check(context, permissions, rationale, option, handler)
     }
 
+    /**
+     * Check/Request Permissions and triggers the handler method properly.
+     *
+     * @param context      the android context.
+     * @param permissions  array of requested permission/permissions.
+     * @param rationale    an explanation message to shown the user explaining why this permission is necessary.
+     *                     if s/he denied the permission earlier.
+     * @param option       message option for handling permissions.
+     * @param handler      a handler object of type [PermissionHandler] to handle different user action like permissions grant,
+     *                     permissions denied and permissions blocked.
+     */
     @JvmStatic
     private fun check(
         context: Context,
