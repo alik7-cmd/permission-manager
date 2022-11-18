@@ -21,7 +21,7 @@ class PermissionActivity : AppCompatActivity() {
     private var allPermissions: ArrayList<String>? = null
     private var deniedPermissions: ArrayList<String>? = null
     private var noRationaleList: ArrayList<String>? = null
-    private var permissionMessages: PermissionMessages? = null
+    private var permissionMessage: PermissionMessage? = null
     @TargetApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,9 +34,9 @@ class PermissionActivity : AppCompatActivity() {
         }
         window.statusBarColor = 0
         allPermissions = bundle.getStringArrayList(BUNDLE_PERMISSIONS)
-        permissionMessages = bundle.getParcelable(BUNDLE_MESSAGES, PermissionMessages::class.java)
-        if (permissionMessages == null) {
-            permissionMessages = PermissionMessages()
+        permissionMessage = bundle.getParcelable(BUNDLE_MESSAGES, PermissionMessage::class.java)
+        if (permissionMessage == null) {
+            permissionMessage = PermissionMessage()
         }
         deniedPermissions = ArrayList()
         noRationaleList = ArrayList()
@@ -74,7 +74,7 @@ class PermissionActivity : AppCompatActivity() {
                 deny()
             }
         }
-        AlertDialog.Builder(this).setTitle(permissionMessages!!.rationaleDialogTitle)
+        AlertDialog.Builder(this).setTitle(permissionMessage!!.rationaleDialogTitle)
             .setMessage(rationale)
             .setPositiveButton(R.string.permission_manager_text_ok, listener)
             .setNegativeButton(R.string.permission_manager_text_cancel, listener)
@@ -137,14 +137,14 @@ class PermissionActivity : AppCompatActivity() {
     }
 
     private fun sendToSettings() {
-        if (!permissionMessages!!.sendBlockedToSettings) {
+        if (!permissionMessage!!.sendBlockedToSettings) {
             deny()
             return
         }
         log("Ask to go to settings.")
-        AlertDialog.Builder(this).setTitle(permissionMessages!!.settingsDialogTitle)
-            .setMessage(permissionMessages!!.settingsDialogMessage)
-            .setPositiveButton(permissionMessages!!.settingsText) { dialog, which ->
+        AlertDialog.Builder(this).setTitle(permissionMessage!!.settingsDialogTitle)
+            .setMessage(permissionMessage!!.settingsDialogMessage)
+            .setPositiveButton(permissionMessage!!.settingsText) { dialog, which ->
                 val intent = Intent(
                     Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                     Uri.fromParts("package", packageName, null)
@@ -159,7 +159,7 @@ class PermissionActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RC_SETTINGS && permissionHandler != null) {
             PermissionManager.check(
-                this, allPermissions!!.toTypedArray(), null, permissionMessages,
+                this, allPermissions!!.toTypedArray(), null, permissionMessage,
                 permissionHandler
             )
         }
@@ -201,17 +201,17 @@ class PermissionActivity : AppCompatActivity() {
         fun onNewIntent(
             context: Context?,
             permissionList: ArrayList<String>?,
-            permissionMessages: PermissionMessages?,
+            permissionMessage: PermissionMessage?,
             rationale: String?
         ): Intent {
             val bundle = Bundle()
-            bundle.putParcelable(BUNDLE_MESSAGES, permissionMessages)
+            bundle.putParcelable(BUNDLE_MESSAGES, permissionMessage)
             bundle.putStringArrayList(BUNDLE_PERMISSIONS, permissionList)
             bundle.putString(BUNDLE_RATIONALE, rationale)
             val intent = Intent(context, PermissionActivity::class.java).apply {
                 putExtras(bundle)
             }
-            if (permissionMessages != null && permissionMessages.createNewTask) {
+            if (permissionMessage != null && permissionMessage.createNewTask) {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
             return intent
