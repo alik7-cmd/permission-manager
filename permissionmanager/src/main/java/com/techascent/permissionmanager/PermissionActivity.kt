@@ -21,7 +21,7 @@ class PermissionActivity : AppCompatActivity() {
     private var allPermissions: ArrayList<String>? = null
     private var deniedPermissions: ArrayList<String>? = null
     private var noRationaleList: ArrayList<String>? = null
-    private var permissionMessage: PermissionMessage? = null
+    private var options: Options? = null
     @TargetApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,9 +34,9 @@ class PermissionActivity : AppCompatActivity() {
         }
         window.statusBarColor = 0
         allPermissions = bundle.getStringArrayList(BUNDLE_PERMISSIONS)
-        permissionMessage = bundle.getParcelable(BUNDLE_MESSAGES, PermissionMessage::class.java)
-        if (permissionMessage == null) {
-            permissionMessage = PermissionMessage()
+        options = bundle.getParcelable(BUNDLE_MESSAGES)
+        if (options == null) {
+            options = Options()
         }
         deniedPermissions = ArrayList()
         noRationaleList = ArrayList()
@@ -74,7 +74,7 @@ class PermissionActivity : AppCompatActivity() {
                 deny()
             }
         }
-        AlertDialog.Builder(this).setTitle(permissionMessage!!.rationaleDialogTitle)
+        AlertDialog.Builder(this).setTitle(options!!.rationaleDialogTitle)
             .setMessage(rationale)
             .setPositiveButton(R.string.permission_manager_text_ok, listener)
             .setNegativeButton(R.string.permission_manager_text_cancel, listener)
@@ -137,14 +137,14 @@ class PermissionActivity : AppCompatActivity() {
     }
 
     private fun sendToSettings() {
-        if (!permissionMessage!!.sendBlockedToSettings) {
+        if (!options!!.sendBlockedToSettings) {
             deny()
             return
         }
         log("Ask to go to settings.")
-        AlertDialog.Builder(this).setTitle(permissionMessage!!.settingsDialogTitle)
-            .setMessage(permissionMessage!!.settingsDialogMessage)
-            .setPositiveButton(permissionMessage!!.settingsText) { dialog, which ->
+        AlertDialog.Builder(this).setTitle(options!!.settingsDialogTitle)
+            .setMessage(options!!.settingsDialogMessage)
+            .setPositiveButton(options!!.settingsText) { dialog, which ->
                 val intent = Intent(
                     Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                     Uri.fromParts("package", packageName, null)
@@ -159,7 +159,7 @@ class PermissionActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RC_SETTINGS && permissionHandler != null) {
             PermissionManager.check(
-                this, allPermissions!!.toTypedArray(), null, permissionMessage,
+                this, allPermissions!!.toTypedArray(), null, options,
                 permissionHandler
             )
         }
@@ -201,17 +201,17 @@ class PermissionActivity : AppCompatActivity() {
         fun onNewIntent(
             context: Context?,
             permissionList: ArrayList<String>?,
-            permissionMessage: PermissionMessage?,
+            options: Options?,
             rationale: String?
         ): Intent {
             val bundle = Bundle()
-            bundle.putParcelable(BUNDLE_MESSAGES, permissionMessage)
+            bundle.putParcelable(BUNDLE_MESSAGES, options)
             bundle.putStringArrayList(BUNDLE_PERMISSIONS, permissionList)
             bundle.putString(BUNDLE_RATIONALE, rationale)
             val intent = Intent(context, PermissionActivity::class.java).apply {
                 putExtras(bundle)
             }
-            if (permissionMessage != null && permissionMessage.createNewTask) {
+            if (options != null && options.createNewTask) {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
             return intent

@@ -4,7 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 
 
-data class PermissionMessage(
+data class Options(
 
     var settingsText: String? = "Settings",
     var rationaleDialogTitle: String? = "Permissions Required",
@@ -32,12 +32,12 @@ data class PermissionMessage(
         TODO("Not yet implemented")
     }
 
-    companion object CREATOR : Parcelable.Creator<PermissionMessage> {
-        override fun createFromParcel(parcel: Parcel): PermissionMessage {
-            return PermissionMessage(parcel)
+    companion object CREATOR : Parcelable.Creator<Options> {
+        override fun createFromParcel(parcel: Parcel): Options {
+            return Options(parcel)
         }
 
-        override fun newArray(size: Int): Array<PermissionMessage?> {
+        override fun newArray(size: Int): Array<Options?> {
             return arrayOfNulls(size)
         }
     }

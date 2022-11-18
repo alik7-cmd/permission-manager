@@ -85,7 +85,7 @@ object PermissionManager {
         context: Context,
         permissions: Array<String>,
         rationaleId: Int?,
-        option: PermissionMessage?,
+        option: Options?,
         handler: PermissionHandler?
     ) {
         val rationale: String? = try {
@@ -112,7 +112,7 @@ object PermissionManager {
         context: Context,
         permissions: Array<String>,
         rationale: String?,
-        option: PermissionMessage?,
+        option: Options?,
         handler: PermissionHandler?
     ) {
         if (Build.VERSION.SDK_INT < 23) {
