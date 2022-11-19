@@ -3,13 +3,13 @@ package com.techascent.permissionmanager
 import android.content.Context
 import java.lang.StringBuilder
 
-abstract class PermissionHandler {
+abstract class PermissionListener {
 
     var isLoggingEnabled = true
 
-    abstract fun onPermissionGranted()
+    abstract fun onGranted()
 
-    open fun onPermissionDenied(context: Context, listOfDeniedPermission: List<String>) {
+    open fun onDenied(context: Context, listOfDeniedPermission: List<String>) {
         if (isLoggingEnabled) {
 
             val builder = StringBuilder()
@@ -22,7 +22,7 @@ abstract class PermissionHandler {
         }
     }
 
-    open fun onPermissionBlocked(context: Context, listOfBlockedPermission: List<String>): Boolean {
+    open fun onBlocked(context: Context, listOfBlockedPermission: List<String>): Boolean {
         if (isLoggingEnabled) {
             val builder = StringBuilder()
             builder.append("Blocked permissions are :")
@@ -49,6 +49,6 @@ abstract class PermissionHandler {
             }
             PermissionManager.log(builder.toString())
         }
-        onPermissionDenied(context, listOfDeniedPermission)
+        onDenied(context, listOfDeniedPermission)
     }
 }

@@ -29,18 +29,18 @@ object PermissionManager {
      * @param permission  list of requested permissions.
      * @param rationale   an explanation message to shown the user explaining why this permission is necessary.
      *                    if s/he denied the permission earlier.
-     * @param handler     a handler object of type [PermissionHandler] to handle different user action like permissions grant,
+     * @param handler     a handler object of type [PermissionListener] to handle different user action like permissions grant,
      *                    permissions denied and permissions blocked.
      */
     @JvmStatic
-    fun check(
+    fun with(
         context: Context,
         permission: String,
         rationale: String?,
-        handler: PermissionHandler
+        handler: PermissionListener
     ) {
         val permissions = arrayOf(permission)
-        check(context, permissions, rationale, null, handler)
+        with(context, permissions, rationale, null, handler)
     }
 
     /**
@@ -50,15 +50,15 @@ object PermissionManager {
      * @param permission   requested permissions.
      * @param rationaleId  a string id of an explanation message to shown the user explaining why this permission is necessary.
      *                     if s/he denied the permission earlier.
-     * @param handler      a handler object of type [PermissionHandler] to handle different user action like permissions grant,
+     * @param handler      a handler object of type [PermissionListener] to handle different user action like permissions grant,
      *                     permissions denied and permissions blocked.
      */
     @JvmStatic
-    fun check(
+    fun with(
         context: Context,
         permission: String,
         rationaleId: Int,
-        handler: PermissionHandler
+        handler: PermissionListener
     ) {
         val rationale: String? = try {
             context.getString(rationaleId)
@@ -66,7 +66,7 @@ object PermissionManager {
             null
         }
         val permissions = arrayOf(permission)
-        check(context, permissions, rationale, null, handler)
+        with(context, permissions, rationale, null, handler)
     }
 
     /**
@@ -77,23 +77,23 @@ object PermissionManager {
      * @param rationaleId  a string id of an explanation message to shown the user explaining why this permission is necessary.
      *                     if s/he denied the permission earlier.
      * @param option       message option for handling permissions.
-     * @param handler      a handler object of type [PermissionHandler] to handle different user action like permissions grant,
+     * @param handler      a handler object of type [PermissionListener] to handle different user action like permissions grant,
      *                     permissions denied and permissions blocked.
      */
     @JvmStatic
-    fun check(
+    fun with(
         context: Context,
         permissions: Array<String>,
         rationaleId: Int?,
         option: Options?,
-        handler: PermissionHandler?
+        handler: PermissionListener?
     ) {
         val rationale: String? = try {
             context.getString(rationaleId!!)
         } catch (e: Exception) {
             null
         }
-        check(context, permissions, rationale, option, handler)
+        with(context, permissions, rationale, option, handler)
     }
 
     /**
@@ -104,19 +104,19 @@ object PermissionManager {
      * @param rationale    an explanation message to shown the user explaining why this permission is necessary.
      *                     if s/he denied the permission earlier.
      * @param option       message option for handling permissions.
-     * @param handler      a handler object of type [PermissionHandler] to handle different user action like permissions grant,
+     * @param handler      a handler object of type [PermissionListener] to handle different user action like permissions grant,
      *                     permissions denied and permissions blocked.
      */
     @JvmStatic
-    private fun check(
+    private fun with(
         context: Context,
         permissions: Array<String>,
         rationale: String?,
         option: Options?,
-        handler: PermissionHandler?
+        handler: PermissionListener?
     ) {
         if (Build.VERSION.SDK_INT < 23) {
-            handler?.onPermissionGranted()
+            handler?.onGranted()
             log("SDK version is less than 23")
         } else {
             val permissionSet = mutableSetOf<String>()
@@ -132,10 +132,10 @@ object PermissionManager {
             }
 
             if (allPermissionGranted) {
-                handler?.onPermissionGranted()
-                PermissionActivity.permissionHandler = null
+                handler?.onGranted()
+                PermissionActivity.permissionListener = null
             } else {
-                PermissionActivity.permissionHandler = handler
+                PermissionActivity.permissionListener = handler
                 val allPermissionList = arrayListOf<String>()
                 allPermissionList.addAll(permissionSet)
                 val intent = PermissionActivity.onNewIntent(

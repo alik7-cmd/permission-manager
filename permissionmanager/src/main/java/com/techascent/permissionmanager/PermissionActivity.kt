@@ -115,7 +115,7 @@ class PermissionActivity : AppCompatActivity() {
                     }
                 }
                 if (justBlockedList.size > 0) { //checked don't ask again for at least one.
-                    val pelicanPermissionHandler = permissionHandler
+                    val pelicanPermissionHandler = permissionListener
                     finish()
                     pelicanPermissionHandler?.onJustBlocked(
                         applicationContext, justBlockedList,
@@ -124,8 +124,8 @@ class PermissionActivity : AppCompatActivity() {
                 } else if (justDeniedList.size > 0) { //clicked deny for at least one.
                     deny()
                 } else { //unavailable permissions were already set not to ask again.
-                    if (permissionHandler != null &&
-                        !permissionHandler!!.onPermissionBlocked(
+                    if (permissionListener != null &&
+                        !permissionListener!!.onBlocked(
                             applicationContext, blockedList
                         )
                     ) {
@@ -157,10 +157,10 @@ class PermissionActivity : AppCompatActivity() {
 
     @SuppressLint("MissingSuperCall")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == RC_SETTINGS && permissionHandler != null) {
-            PermissionManager.check(
+        if (requestCode == RC_SETTINGS && permissionListener != null) {
+            PermissionManager.with(
                 this, allPermissions!!.toTypedArray(), null, options,
-                permissionHandler
+                permissionListener
             )
         }
         // super, because overridden method will make the handler null, and we don't want that.
@@ -168,20 +168,20 @@ class PermissionActivity : AppCompatActivity() {
     }
 
     override fun finish() {
-        permissionHandler = null
+        permissionListener = null
         super.finish()
     }
 
     private fun deny() {
-        val pelicanPermissionHandler = permissionHandler
+        val pelicanPermissionHandler = permissionListener
         finish()
-        pelicanPermissionHandler?.onPermissionDenied(applicationContext, deniedPermissions!!)
+        pelicanPermissionHandler?.onDenied(applicationContext, deniedPermissions!!)
     }
 
     private fun grant() {
-        val pelicanPermissionHandler = permissionHandler
+        val pelicanPermissionHandler = permissionListener
         finish()
-        pelicanPermissionHandler?.onPermissionGranted()
+        pelicanPermissionHandler?.onGranted()
     }
 
     override fun onDestroy() {
@@ -197,7 +197,7 @@ class PermissionActivity : AppCompatActivity() {
         const val BUNDLE_PERMISSIONS = "BUNDLE_PERMISSIONS"
         const val BUNDLE_RATIONALE = "BUNDLE_RATIONALE"
         const val BUNDLE_MESSAGES = "BUNDLE_MESSAGES"
-        var permissionHandler: PermissionHandler? = null
+        var permissionListener: PermissionListener? = null
         fun onNewIntent(
             context: Context?,
             permissionList: ArrayList<String>?,

@@ -5,8 +5,7 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import android.widget.Toast
-import com.techascent.permissionmanager.PermissionHandler
+import com.techascent.permissionmanager.PermissionListener
 import com.techascent.permissionmanager.PermissionManager
 
 class HomeActivity : AppCompatActivity() {
@@ -19,64 +18,51 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
         findViewById<Button>(R.id.btn_permission).setOnClickListener {
-            takeMultiplePermission()
+            //takeMultiplePermission()
         }
         //
     }
 
-
     private fun takeMultiplePermission(){
-        PermissionManager.check(this, listOfPermission, null, null, object : PermissionHandler() {
-            override fun onPermissionGranted() {
-                Toast.makeText(this@HomeActivity, "Granted", Toast.LENGTH_SHORT).show()
-            }
-
-            override fun onPermissionDenied(
-                context: Context,
-                listOfDeniedPermission: List<String>
-            ) {
-                super.onPermissionDenied(context, listOfDeniedPermission)
+        PermissionManager.with(this, listOfPermission, null, null, object : PermissionListener(){
+            override fun onGranted() {
                 // Do whatever you want to do
             }
 
-            override fun onPermissionBlocked(
+            override fun onDenied(context: Context, listOfDeniedPermission: List<String>) {
+                super.onDenied(context, listOfDeniedPermission)
+                // Do whatever you want to do
+            }
+
+            override fun onBlocked(
                 context: Context,
                 listOfBlockedPermission: List<String>
             ): Boolean {
                 // Do whatever you want to do
-                return super.onPermissionBlocked(context, listOfBlockedPermission)
+                return super.onBlocked(context, listOfBlockedPermission)
             }
-
         })
-
     }
 
     private fun takeSinglePermission(){
-        PermissionManager.check(
-            this,
-            Manifest.permission.CAMERA,
-            null,
-            object : PermissionHandler() {
-                override fun onPermissionGranted() {
-                    // Do whatever you want to do
-                }
+        PermissionManager.with(this, Manifest.permission.CAMERA, null, object : PermissionListener(){
+            override fun onGranted() {
+                // Do whatever you want to do
+            }
 
-                override fun onPermissionBlocked(
-                    context: Context,
-                    listOfBlockedPermission: List<String>
-                ): Boolean {
-                    // Do whatever you want to do
-                    return super.onPermissionBlocked(context, listOfBlockedPermission)
-                }
+            override fun onDenied(context: Context, listOfDeniedPermission: List<String>) {
+                super.onDenied(context, listOfDeniedPermission)
+                // Do whatever you want to do
+            }
 
-                override fun onPermissionDenied(
-                    context: Context,
-                    listOfDeniedPermission: List<String>
-                ) {
-                    // Do whatever you want to do
-                    super.onPermissionDenied(context, listOfDeniedPermission)
-                }
+            override fun onBlocked(
+                context: Context,
+                listOfBlockedPermission: List<String>
+            ): Boolean {
+                // Do whatever you want to do
+                return super.onBlocked(context, listOfBlockedPermission)
+            }
 
-            })
+        })
     }
 }
