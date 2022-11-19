@@ -30,6 +30,9 @@ That's it! You are all set to use the library.
 Pretty easy! Just add below code if you need multiple permissions to ask at the same time.
 
 ``` kotlin
+val listOfPermission: Array<String> =
+        arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        
 PermissionManager.with(this, listOfPermission, null, null, object : PermissionListener(){
             override fun onGranted() {
                 // Do whatever you want to do
