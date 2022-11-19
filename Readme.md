@@ -19,7 +19,7 @@ Add the dependency
 
 ```groovy
 dependencies {
-        implementation 'com.github.alik7-cmd:permission-manager:1.2.7'
+        implementation 'com.github.alik7-cmd:permission-manager:1.2.8'
 }
 ```
 
@@ -30,53 +30,45 @@ That's it! You are all set to use the library.
 Pretty easy! Just add below code if you need multiple permissions to ask at the same time.
 
 ``` kotlin
-private val listOfPermissions: Array<String> =
-        arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-
-PermissionManager.check(this,listOfPermission , null, null, object : PermissionHandler(){
-            override fun onPermissionGranted() {
+PermissionManager.with(this, listOfPermission, null, null, object : PermissionListener(){
+            override fun onGranted() {
                 // Do whatever you want to do
             }
 
-            override fun onPermissionDenied(
-                context: Context,
-                listOfDeniedPermission: List<String>
-            ) {
+            override fun onDenied(context: Context, listOfDeniedPermission: List<String>) {
+                super.onDenied(context, listOfDeniedPermission)
                 // Do whatever you want to do
             }
 
-            override fun onPermissionBlocked(
+            override fun onBlocked(
                 context: Context,
                 listOfBlockedPermission: List<String>
             ): Boolean {
                 // Do whatever you want to do
-                return super.onPermissionBlocked(context, listOfBlockedPermission)
+                return super.onBlocked(context, listOfBlockedPermission)
             }
-
         })
 ```
 
 And if you want to take a single permission use below code
 
 ``` kotlin
-PermissionManager.check(this, Manifest.permission.CAMERA, null ,object : PermissionHandler(){
-            override fun onPermissionGranted() {
+PermissionManager.with(this, Manifest.permission.CAMERA, null, object : PermissionListener(){
+            override fun onGranted() {
                 // Do whatever you want to do
             }
 
-            override fun onPermissionBlocked(
+            override fun onDenied(context: Context, listOfDeniedPermission: List<String>) {
+                super.onDenied(context, listOfDeniedPermission)
+                // Do whatever you want to do
+            }
+
+            override fun onBlocked(
                 context: Context,
                 listOfBlockedPermission: List<String>
             ): Boolean {
                 // Do whatever you want to do
-                return super.onPermissionBlocked(context, listOfBlockedPermission)
-            }
-
-            override fun onPermissionDenied(
-                context: Context,
-                listOfDeniedPermission: List<String>
-            ) {
-                // Do whatever you want to do
+                return super.onBlocked(context, listOfBlockedPermission)
             }
 
         })
