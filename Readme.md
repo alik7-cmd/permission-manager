@@ -3,9 +3,9 @@ Android runtime permissions were introduced in Android 6.0. Obviously it's a goo
 This Library reduces the complexity of handling repetative or multiple permissions in runtime.
 
 ## Step 1:
-Add the JitPack repository to your build.gradle file
+Add the JitPack repository to your build.gradle/settings.gradle file
 
-```
+```groovy
 allprojects {
 	repositories {
 		...
@@ -17,7 +17,7 @@ allprojects {
 ## Step 2:
 Add the dependency
 
-```
+```groovy
 dependencies {
         implementation 'com.github.alik7-cmd:permission-manager:1.2.7'
 }
