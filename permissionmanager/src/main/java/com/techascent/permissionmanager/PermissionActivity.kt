@@ -25,6 +25,8 @@ class PermissionActivity : AppCompatActivity() {
     @TargetApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.hide()
+        supportActionBar?.title = ""
         setFinishOnTouchOutside(false)
         val intent = intent
         val bundle = intent.extras
@@ -32,7 +34,7 @@ class PermissionActivity : AppCompatActivity() {
             finish()
             return
         }
-        window.statusBarColor = 0
+
         allPermissions = bundle.getStringArrayList(BUNDLE_PERMISSIONS)
         options = bundle.getParcelable(BUNDLE_MESSAGES)
         if (options == null) {
