@@ -2,4 +2,5 @@
     <string name="app_name">Permission Manager</string>
     <string name="text_ok">OK</string>
     <string name="text_cancel">Cancel</string>
+    <string name="text_request_permission">Request permission(s)</string>
 </resources>

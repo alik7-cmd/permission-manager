@@ -18,9 +18,8 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
         findViewById<Button>(R.id.btn_permission).setOnClickListener {
-            //takeMultiplePermission()
+            takeMultiplePermission()
         }
-        //
     }
 
     private fun takeMultiplePermission(){
