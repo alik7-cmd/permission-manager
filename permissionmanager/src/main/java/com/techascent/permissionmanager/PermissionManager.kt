@@ -119,8 +119,7 @@ object PermissionManager {
             handler?.onGranted()
             log("SDK version is less than 23")
         } else {
-            val permissionSet = mutableSetOf<String>()
-            Collections.addAll(permissionSet, *permissions)
+            val permissionSet = permissions.toSet()
             var allPermissionGranted = true
             run breaking@{
                 permissionSet.forEach { permission ->
