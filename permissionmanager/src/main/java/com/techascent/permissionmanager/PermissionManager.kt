@@ -6,19 +6,21 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
 
-object PermissionManager {
+class PermissionManager {
 
-    var isLoggingEnabled = true
+    companion object{
+        var isLoggingEnabled = true
 
-    @JvmStatic
-    fun log(message: String) {
-        if (isLoggingEnabled)
-            Log.d("", message)
-    }
+        @JvmStatic
+        fun log(message: String) {
+            if (isLoggingEnabled)
+                Log.d("", message)
+        }
 
-    @JvmStatic
-    fun disableLogging() {
-        isLoggingEnabled = false
+        @JvmStatic
+        fun disableLogging() {
+            isLoggingEnabled = false
+        }
     }
 
     fun shouldEnableLogging(isEnable : Boolean){
@@ -161,7 +163,16 @@ object PermissionManager {
         private var option: Options? = null
         private lateinit var handler: PermissionListener
 
+        private var manager : PermissionManager? = null
+
         private var flag = -1
+        private var isLoggingEnabled = true
+
+        /*companion object{
+            val CREATE: Builder by lazy {
+                Builder()
+            }
+        }*/
 
         fun onRequestPermission(
             context: Context,
@@ -210,11 +221,20 @@ object PermissionManager {
             return this
         }
 
+        fun enableLogging(isEnable: Boolean) : Builder{
+            isLoggingEnabled = isEnable
+            return this
+        }
+
         fun build(){
+            if(manager == null){
+                manager = PermissionManager()
+            }
+            manager?.shouldEnableLogging(isLoggingEnabled)
             when(flag){
-                1 -> with(context, listOfPermissions, rationaleId, option, handler)
-                2 -> with(context, listOfPermissions, rationale, null, handler)
-                3 -> with(context, listOfPermissions, rationale, null, handler)
+                1 -> manager?.with(context, listOfPermissions, rationaleId, option, handler)
+                2 -> manager?.with(context, listOfPermissions, rationale, null, handler)
+                3 -> manager?.with(context, listOfPermissions, rationale, null, handler)
             }
 
         }

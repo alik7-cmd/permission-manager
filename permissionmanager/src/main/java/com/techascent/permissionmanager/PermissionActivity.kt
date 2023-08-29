@@ -14,9 +14,9 @@ import android.os.Bundle
 import android.provider.Settings
 import android.text.TextUtils
 import androidx.activity.result.contract.ActivityResultContracts
-import com.techascent.permissionmanager.PermissionManager.log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.annotation.RequiresApi
+import com.techascent.permissionmanager.PermissionManager.Companion.log
 import java.util.ArrayList
 
 class PermissionActivity : AppCompatActivity() {
@@ -95,7 +95,7 @@ class PermissionActivity : AppCompatActivity() {
         if (grantResults.isEmpty()) {
             deny()
         } else {
-            deniedPermissions?.clear()
+            deniedPermissions!!.clear()
             for (i in grantResults.indices) {
                 if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                     deniedPermissions!!.add(permissions[i])
@@ -119,9 +119,9 @@ class PermissionActivity : AppCompatActivity() {
                     }
                 }
                 if (justBlockedList.size > 0) { //checked don't ask again for at least one.
-                    val handler = permissionListener
+                    val pelicanPermissionHandler = permissionListener
                     finish()
-                    handler?.onJustBlocked(
+                    pelicanPermissionHandler?.onJustBlocked(
                         applicationContext, justBlockedList,
                         deniedPermissions!!
                     )
@@ -148,7 +148,7 @@ class PermissionActivity : AppCompatActivity() {
         log("Ask to go to settings.")
         AlertDialog.Builder(this).setTitle(options!!.settingsDialogTitle)
             .setMessage(options!!.settingsDialogMessage)
-            .setPositiveButton(options!!.settingsText) { _, _ ->
+            .setPositiveButton(options!!.settingsText) { dialog, which ->
                 val intent = Intent(
                     Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                     Uri.fromParts("package", packageName, null)
@@ -158,7 +158,7 @@ class PermissionActivity : AppCompatActivity() {
                     ActivityResultContracts.StartActivityForResult()
                 ) {
                     if (it.resultCode == Activity.RESULT_OK && permissionListener != null) {
-                        PermissionManager.with(
+                        PermissionManager().with(
                             this, allPermissions!!.toTypedArray(), null, options,
                             permissionListener
                         )
@@ -167,7 +167,7 @@ class PermissionActivity : AppCompatActivity() {
                 }
                 launcher.launch(intent)
             }
-            .setNegativeButton(R.string.permission_manager_text_cancel) { _, _ -> deny() }
+            .setNegativeButton(R.string.permission_manager_text_cancel) { dialog, which -> deny() }
             .setOnCancelListener { deny() }.create().show()
     }
 
@@ -177,15 +177,15 @@ class PermissionActivity : AppCompatActivity() {
     }
 
     private fun deny() {
-        val handler = permissionListener
+        val pelicanPermissionHandler = permissionListener
         finish()
-        handler?.onDenied(applicationContext, deniedPermissions!!)
+        pelicanPermissionHandler?.onDenied(applicationContext, deniedPermissions!!)
     }
 
     private fun grant() {
-        val handler = permissionListener
+        val pelicanPermissionHandler = permissionListener
         finish()
-        handler?.onGranted()
+        pelicanPermissionHandler?.onGranted()
     }
 
     override fun onDestroy() {
@@ -196,6 +196,7 @@ class PermissionActivity : AppCompatActivity() {
     }
 
     companion object {
+        private const val RC_SETTINGS = 5599
         private const val RC_PERMISSION = 5717
         const val BUNDLE_PERMISSIONS = "BUNDLE_PERMISSIONS"
         const val BUNDLE_RATIONALE = "BUNDLE_RATIONALE"
