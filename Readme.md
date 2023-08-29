@@ -82,10 +82,10 @@ You can also customize permission request if you want using below code
 
 ```kotlin
 val option = Options(
-            "Settings",
-            "Permissions Required",
-            "Permissions Required",
-            "Requested permission(s) have been set not to ask again. Please provide them from settings.",
+            "Goto Settings",
+            "Permissions Needed",
+            "Permissions Needed",
+            "Please provide requested permission(s) from settings.",
             true,
             false
         )
