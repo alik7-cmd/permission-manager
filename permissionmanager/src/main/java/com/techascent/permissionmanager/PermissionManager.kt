@@ -5,22 +5,29 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
-import java.util.*
 
-object PermissionManager {
+class PermissionManager {
 
-    var isLoggingEnabled = true
+    companion object{
+        var isLoggingEnabled = true
 
-    @JvmStatic
-    fun log(message: String) {
-        if (isLoggingEnabled)
-            Log.d("", message)
+        @JvmStatic
+        fun log(message: String) {
+            if (isLoggingEnabled)
+                Log.d("", message)
+        }
+
+        @JvmStatic
+        fun disableLogging() {
+            isLoggingEnabled = false
+        }
     }
 
-    @JvmStatic
-    fun disableLogging() {
-        isLoggingEnabled = false
+    fun shouldEnableLogging(isEnable : Boolean){
+        isLoggingEnabled = isEnable
     }
+
+
 
     /**
      * Check/Request Permissions and triggers the handler method properly.
@@ -32,7 +39,6 @@ object PermissionManager {
      * @param handler     a handler object of type [PermissionListener] to handle different user action like permissions grant,
      *                    permissions denied and permissions blocked.
      */
-    @JvmStatic
     fun with(
         context: Context,
         permission: String,
@@ -53,7 +59,6 @@ object PermissionManager {
      * @param handler      a handler object of type [PermissionListener] to handle different user action like permissions grant,
      *                     permissions denied and permissions blocked.
      */
-    @JvmStatic
     fun with(
         context: Context,
         permission: String,
@@ -80,7 +85,6 @@ object PermissionManager {
      * @param handler      a handler object of type [PermissionListener] to handle different user action like permissions grant,
      *                     permissions denied and permissions blocked.
      */
-    @JvmStatic
     fun with(
         context: Context,
         permissions: Array<String>,
@@ -107,7 +111,6 @@ object PermissionManager {
      * @param handler      a handler object of type [PermissionListener] to handle different user action like permissions grant,
      *                     permissions denied and permissions blocked.
      */
-    @JvmStatic
     private fun with(
         context: Context,
         permissions: Array<String>,
@@ -147,6 +150,80 @@ object PermissionManager {
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }
                 context.startActivity(intent)
+            }
+
+        }
+    }
+
+    class Builder {
+        private lateinit var context: Context
+        private lateinit var listOfPermissions: Array<String>
+        private lateinit var permission : String
+        private var rationaleId : Int? = null
+        private var rationale: String? = null
+        private var option: Options? = null
+        private lateinit var handler: PermissionListener
+        private var isLoggingEnabled = false
+
+        private var flag = -1
+
+        private var manager: PermissionManager? = null
+
+        fun onRequestPermission(
+            context: Context,
+            permissions: Array<String>,
+            rationaleId: Int?,
+            option: Options?,
+            handler: PermissionListener
+        ): Builder {
+            this.context= context
+            this.listOfPermissions= permissions
+            this.rationaleId = rationaleId
+            this.option= option
+            this.handler= handler
+            flag = 1
+
+            return this
+        }
+
+        fun onRequestPermission(
+            context: Context,
+            permission: String,
+            rationaleId: Int,
+            handler: PermissionListener
+        ): Builder {
+            this.context= context
+            this.listOfPermissions= arrayOf(permission)
+            this.rationaleId = rationaleId
+            this.handler= handler
+            flag = 2
+
+            return this
+        }
+
+        fun onRequestPermission(
+            context: Context,
+            permission: String,
+            rationale: String?,
+            handler: PermissionListener
+        ): Builder {
+            this.context= context
+            this.listOfPermissions= arrayOf(permission)
+            this.rationale = rationale
+            this.handler= handler
+            flag = 3
+
+            return this
+        }
+
+        fun build(){
+            if(manager == null){
+                manager = PermissionManager()
+            }
+            when(flag){
+                1 -> manager?.with(context, listOfPermissions, rationaleId, option, handler)
+                2 -> manager?.with(context, listOfPermissions, rationale, null, handler)
+                3 -> manager?.with(context, listOfPermissions, rationale, null, handler)
             }
 
         }

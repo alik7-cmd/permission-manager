@@ -12,9 +12,9 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.text.TextUtils
-import com.techascent.permissionmanager.PermissionManager.log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.annotation.RequiresApi
+import com.techascent.permissionmanager.PermissionManager.Companion.log
 import java.util.ArrayList
 
 class PermissionActivity : AppCompatActivity() {
@@ -160,7 +160,7 @@ class PermissionActivity : AppCompatActivity() {
     @SuppressLint("MissingSuperCall")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RC_SETTINGS && permissionListener != null) {
-            PermissionManager.with(
+            PermissionManager().with(
                 this, allPermissions!!.toTypedArray(), null, options,
                 permissionListener
             )
