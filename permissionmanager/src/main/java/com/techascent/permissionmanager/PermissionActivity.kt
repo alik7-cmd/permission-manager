@@ -95,7 +95,7 @@ class PermissionActivity : AppCompatActivity() {
         if (grantResults.isEmpty()) {
             deny()
         } else {
-            deniedPermissions!!.clear()
+            deniedPermissions?.clear()
             for (i in grantResults.indices) {
                 if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                     deniedPermissions!!.add(permissions[i])
@@ -119,9 +119,9 @@ class PermissionActivity : AppCompatActivity() {
                     }
                 }
                 if (justBlockedList.size > 0) { //checked don't ask again for at least one.
-                    val pelicanPermissionHandler = permissionListener
+                    val handler = permissionListener
                     finish()
-                    pelicanPermissionHandler?.onJustBlocked(
+                    handler?.onJustBlocked(
                         applicationContext, justBlockedList,
                         deniedPermissions!!
                     )
@@ -177,15 +177,15 @@ class PermissionActivity : AppCompatActivity() {
     }
 
     private fun deny() {
-        val pelicanPermissionHandler = permissionListener
+        val handler = permissionListener
         finish()
-        pelicanPermissionHandler?.onDenied(applicationContext, deniedPermissions!!)
+        handler?.onDenied(applicationContext, deniedPermissions!!)
     }
 
     private fun grant() {
-        val pelicanPermissionHandler = permissionListener
+        val handler = permissionListener
         finish()
-        pelicanPermissionHandler?.onGranted()
+        handler?.onGranted()
     }
 
     override fun onDestroy() {
@@ -196,7 +196,6 @@ class PermissionActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val RC_SETTINGS = 5599
         private const val RC_PERMISSION = 5717
         const val BUNDLE_PERMISSIONS = "BUNDLE_PERMISSIONS"
         const val BUNDLE_RATIONALE = "BUNDLE_RATIONALE"

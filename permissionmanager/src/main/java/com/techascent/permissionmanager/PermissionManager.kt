@@ -5,16 +5,17 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
-import java.util.*
 
 object PermissionManager {
 
-    var isLoggingEnabled = true
+    private val TAG = PermissionManager::class.java.name
+
+    private var isLoggingEnabled = true
 
     @JvmStatic
     fun log(message: String) {
         if (isLoggingEnabled)
-            Log.d("", message)
+            Log.d(TAG, message)
     }
 
     @JvmStatic
