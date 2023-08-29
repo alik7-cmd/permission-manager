@@ -2,11 +2,14 @@ package com.techascent.example
 
 import android.Manifest
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
+import android.provider.MediaStore
 import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
 import com.techascent.permissionmanager.PermissionListener
 import com.techascent.permissionmanager.PermissionManager
+
 
 class HomeActivity : AppCompatActivity() {
 
@@ -25,7 +28,9 @@ class HomeActivity : AppCompatActivity() {
     private fun takeMultiplePermission(){
         PermissionManager.with(this, listOfPermission, null, null, object : PermissionListener(){
             override fun onGranted() {
-                // Do whatever you want to do
+                // open camera app
+                val camera_intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                startActivity(camera_intent)
             }
 
             override fun onDenied(context: Context, listOfDeniedPermission: List<String>) {
