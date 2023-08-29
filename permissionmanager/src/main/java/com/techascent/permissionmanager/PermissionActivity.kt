@@ -2,6 +2,7 @@ package com.techascent.permissionmanager
 
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
@@ -12,6 +13,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.text.TextUtils
+import androidx.activity.result.contract.ActivityResultContracts
 import com.techascent.permissionmanager.PermissionManager.log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.annotation.RequiresApi
@@ -151,22 +153,22 @@ class PermissionActivity : AppCompatActivity() {
                     Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                     Uri.fromParts("package", packageName, null)
                 )
-                startActivityForResult(intent, RC_SETTINGS)
+
+                val launcher = registerForActivityResult(
+                    ActivityResultContracts.StartActivityForResult()
+                ) {
+                    if (it.resultCode == Activity.RESULT_OK && permissionListener != null) {
+                        PermissionManager.with(
+                            this, allPermissions!!.toTypedArray(), null, options,
+                            permissionListener
+                        )
+                    }
+                    super.finish()
+                }
+                launcher.launch(intent)
             }
             .setNegativeButton(R.string.permission_manager_text_cancel) { dialog, which -> deny() }
             .setOnCancelListener { deny() }.create().show()
-    }
-
-    @SuppressLint("MissingSuperCall")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == RC_SETTINGS && permissionListener != null) {
-            PermissionManager.with(
-                this, allPermissions!!.toTypedArray(), null, options,
-                permissionListener
-            )
-        }
-        // super, because overridden method will make the handler null, and we don't want that.
-        super.finish()
     }
 
     override fun finish() {
