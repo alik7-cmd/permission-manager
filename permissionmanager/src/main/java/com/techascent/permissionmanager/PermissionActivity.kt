@@ -148,27 +148,28 @@ class PermissionActivity : AppCompatActivity() {
         log("Ask to go to settings.")
         AlertDialog.Builder(this).setTitle(options!!.settingsDialogTitle)
             .setMessage(options!!.settingsDialogMessage)
-            .setPositiveButton(options!!.settingsText) { dialog, which ->
+            .setPositiveButton(options!!.settingsText) { _, _ ->
                 val intent = Intent(
                     Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                     Uri.fromParts("package", packageName, null)
                 )
 
-                val launcher = registerForActivityResult(
-                    ActivityResultContracts.StartActivityForResult()
-                ) {
-                    if (it.resultCode == Activity.RESULT_OK && permissionListener != null) {
-                        PermissionManager().with(
-                            this, allPermissions!!.toTypedArray(), null, options,
-                            permissionListener
-                        )
-                    }
-                    super.finish()
-                }
-                launcher.launch(intent)
+                startActivityForResult(intent, RC_SETTINGS)
             }
-            .setNegativeButton(R.string.permission_manager_text_cancel) { dialog, which -> deny() }
+            .setNegativeButton(R.string.permission_manager_text_cancel) { _, _ -> deny() }
             .setOnCancelListener { deny() }.create().show()
+    }
+
+    @SuppressLint("MissingSuperCall")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == RC_SETTINGS && permissionListener != null) {
+            PermissionManager().with(
+                this, allPermissions!!.toTypedArray(), null, options,
+                permissionListener
+            )
+        }
+        // super, because overridden method will make the handler null, and we don't want that.
+        super.finish()
     }
 
     override fun finish() {

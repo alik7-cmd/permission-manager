@@ -1,6 +1,7 @@
 package com.techascent.example
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.MediaStore
@@ -13,7 +14,7 @@ import com.techascent.permissionmanager.PermissionManager
 class HomeActivity : AppCompatActivity() {
 
 
-    private val listOfPermission: Array<String> =
+    private val listOfPermission =
         arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,16 +26,28 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun takeMultiplePermission() {
-        PermissionManager.Builder().onRequestPermission(this,
-            listOfPermission,
-            null,
-            null,
-            object : PermissionListener() {
-                override fun onGranted() {
-                    openCamera()
-                }
-            }).enableLogging(true)
-            .build()
+        PermissionManager.Builder()
+            .enableLogging(true)
+            .onRequestPermission(this,
+                listOfPermission,
+                null,
+                null,
+                object : PermissionListener() {
+                    override fun onGranted() {
+                        openCamera()
+                    }
+
+                    override fun onBlocked(
+                        context: Context,
+                        listOfBlockedPermission: List<String>
+                    ): Boolean {
+                        return super.onBlocked(context, listOfBlockedPermission)
+                    }
+
+                    override fun onDenied(context: Context, listOfDeniedPermission: List<String>) {
+                        super.onDenied(context, listOfDeniedPermission)
+                    }
+                }).enableLogging(true).build()
     }
 
     private fun takeSinglePermission() {
@@ -46,8 +59,18 @@ class HomeActivity : AppCompatActivity() {
                 override fun onGranted() {
                     openCamera()
                 }
-            }).enableLogging(true)
-            .build()
+
+                override fun onBlocked(
+                    context: Context,
+                    listOfBlockedPermission: List<String>
+                ): Boolean {
+                    return super.onBlocked(context, listOfBlockedPermission)
+                }
+
+                override fun onDenied(context: Context, listOfDeniedPermission: List<String>) {
+                    super.onDenied(context, listOfDeniedPermission)
+                }
+            }).enableLogging(true).build()
     }
 
     private fun openCamera() {
