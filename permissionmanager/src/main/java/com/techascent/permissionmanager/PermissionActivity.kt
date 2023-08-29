@@ -148,7 +148,7 @@ class PermissionActivity : AppCompatActivity() {
         log("Ask to go to settings.")
         AlertDialog.Builder(this).setTitle(options!!.settingsDialogTitle)
             .setMessage(options!!.settingsDialogMessage)
-            .setPositiveButton(options!!.settingsText) { dialog, which ->
+            .setPositiveButton(options!!.settingsText) { _, _ ->
                 val intent = Intent(
                     Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                     Uri.fromParts("package", packageName, null)
@@ -167,7 +167,7 @@ class PermissionActivity : AppCompatActivity() {
                 }
                 launcher.launch(intent)
             }
-            .setNegativeButton(R.string.permission_manager_text_cancel) { dialog, which -> deny() }
+            .setNegativeButton(R.string.permission_manager_text_cancel) { _, _ -> deny() }
             .setOnCancelListener { deny() }.create().show()
     }
 

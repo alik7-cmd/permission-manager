@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.techascent.permissionmanager.Options
 import com.techascent.permissionmanager.PermissionListener
 import com.techascent.permissionmanager.PermissionManager
 

@@ -1,6 +1,6 @@
-# permission-manager
-Android runtime permissions were introduced in Android 6.0. Obviously it's a good thing to have as an user, but this can give nightmare to the developer if its not handled properly.
-This Library reduces the complexity of handling repetative or multiple permissions in runtime.
+# Permission Manager
+Android runtime permissions were introduced in Android 6.0. Obviously, it's a good thing to have as a user, but this can be a nightmare for the developer if it's not handled properly.
+This library reduces the complexity of handling repetitive or multiple permissions at runtime.
 
 ## Step 1:
 Add the JitPack repository to your build.gradle/settings.gradle file
@@ -74,6 +74,40 @@ PermissionManager.with(this, Manifest.permission.CAMERA, null, object : Permissi
                 return super.onBlocked(context, listOfBlockedPermission)
             }
 
+        })
+```
+
+
+You can also customize permission request if you want using below code 
+
+```kotlin
+val option = Options(
+            "Settings",
+            "Permissions Required",
+            "Permissions Required",
+            "Requested permission(s) have been set not to ask again. Please provide them from settings.",
+            true,
+            false
+        )
+        PermissionManager.with(this, listOfPermission, null, option, object : PermissionListener(){
+            override fun onGranted() {
+                // open camera app for example
+                val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                startActivity(intent)
+            }
+
+            override fun onDenied(context: Context, listOfDeniedPermission: List<String>) {
+                super.onDenied(context, listOfDeniedPermission)
+                // Do whatever you want to do
+            }
+
+            override fun onBlocked(
+                context: Context,
+                listOfBlockedPermission: List<String>
+            ): Boolean {
+                // Do whatever you want to do
+                return super.onBlocked(context, listOfBlockedPermission)
+            }
         })
 ```
 
