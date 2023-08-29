@@ -2,6 +2,7 @@ package com.techascent.permissionmanager
 
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
@@ -12,9 +13,10 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.text.TextUtils
+import androidx.activity.result.contract.ActivityResultContracts
+import com.techascent.permissionmanager.PermissionManager.log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.annotation.RequiresApi
-import com.techascent.permissionmanager.PermissionManager.Companion.log
 import java.util.ArrayList
 
 class PermissionActivity : AppCompatActivity() {
@@ -93,7 +95,7 @@ class PermissionActivity : AppCompatActivity() {
         if (grantResults.isEmpty()) {
             deny()
         } else {
-            deniedPermissions!!.clear()
+            deniedPermissions?.clear()
             for (i in grantResults.indices) {
                 if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                     deniedPermissions!!.add(permissions[i])
@@ -117,9 +119,9 @@ class PermissionActivity : AppCompatActivity() {
                     }
                 }
                 if (justBlockedList.size > 0) { //checked don't ask again for at least one.
-                    val pelicanPermissionHandler = permissionListener
+                    val handler = permissionListener
                     finish()
-                    pelicanPermissionHandler?.onJustBlocked(
+                    handler?.onJustBlocked(
                         applicationContext, justBlockedList,
                         deniedPermissions!!
                     )
@@ -146,27 +148,27 @@ class PermissionActivity : AppCompatActivity() {
         log("Ask to go to settings.")
         AlertDialog.Builder(this).setTitle(options!!.settingsDialogTitle)
             .setMessage(options!!.settingsDialogMessage)
-            .setPositiveButton(options!!.settingsText) { dialog, which ->
+            .setPositiveButton(options!!.settingsText) { _, _ ->
                 val intent = Intent(
                     Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                     Uri.fromParts("package", packageName, null)
                 )
-                startActivityForResult(intent, RC_SETTINGS)
-            }
-            .setNegativeButton(R.string.permission_manager_text_cancel) { dialog, which -> deny() }
-            .setOnCancelListener { deny() }.create().show()
-    }
 
-    @SuppressLint("MissingSuperCall")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == RC_SETTINGS && permissionListener != null) {
-            PermissionManager().with(
-                this, allPermissions!!.toTypedArray(), null, options,
-                permissionListener
-            )
-        }
-        // super, because overridden method will make the handler null, and we don't want that.
-        super.finish()
+                val launcher = registerForActivityResult(
+                    ActivityResultContracts.StartActivityForResult()
+                ) {
+                    if (it.resultCode == Activity.RESULT_OK && permissionListener != null) {
+                        PermissionManager.with(
+                            this, allPermissions!!.toTypedArray(), null, options,
+                            permissionListener
+                        )
+                    }
+                    super.finish()
+                }
+                launcher.launch(intent)
+            }
+            .setNegativeButton(R.string.permission_manager_text_cancel) { _, _ -> deny() }
+            .setOnCancelListener { deny() }.create().show()
     }
 
     override fun finish() {
@@ -175,15 +177,15 @@ class PermissionActivity : AppCompatActivity() {
     }
 
     private fun deny() {
-        val pelicanPermissionHandler = permissionListener
+        val handler = permissionListener
         finish()
-        pelicanPermissionHandler?.onDenied(applicationContext, deniedPermissions!!)
+        handler?.onDenied(applicationContext, deniedPermissions!!)
     }
 
     private fun grant() {
-        val pelicanPermissionHandler = permissionListener
+        val handler = permissionListener
         finish()
-        pelicanPermissionHandler?.onGranted()
+        handler?.onGranted()
     }
 
     override fun onDestroy() {
@@ -194,7 +196,6 @@ class PermissionActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val RC_SETTINGS = 5599
         private const val RC_PERMISSION = 5717
         const val BUNDLE_PERMISSIONS = "BUNDLE_PERMISSIONS"
         const val BUNDLE_RATIONALE = "BUNDLE_RATIONALE"

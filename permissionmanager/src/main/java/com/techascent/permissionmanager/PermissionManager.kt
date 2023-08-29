@@ -6,21 +6,19 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
 
-class PermissionManager {
+object PermissionManager {
 
-    companion object{
-        var isLoggingEnabled = true
+    var isLoggingEnabled = true
 
-        @JvmStatic
-        fun log(message: String) {
-            if (isLoggingEnabled)
-                Log.d("", message)
-        }
+    @JvmStatic
+    fun log(message: String) {
+        if (isLoggingEnabled)
+            Log.d("", message)
+    }
 
-        @JvmStatic
-        fun disableLogging() {
-            isLoggingEnabled = false
-        }
+    @JvmStatic
+    fun disableLogging() {
+        isLoggingEnabled = false
     }
 
     fun shouldEnableLogging(isEnable : Boolean){
@@ -158,16 +156,12 @@ class PermissionManager {
     class Builder {
         private lateinit var context: Context
         private lateinit var listOfPermissions: Array<String>
-        private lateinit var permission : String
         private var rationaleId : Int? = null
         private var rationale: String? = null
         private var option: Options? = null
         private lateinit var handler: PermissionListener
-        private var isLoggingEnabled = false
 
         private var flag = -1
-
-        private var manager: PermissionManager? = null
 
         fun onRequestPermission(
             context: Context,
@@ -217,13 +211,10 @@ class PermissionManager {
         }
 
         fun build(){
-            if(manager == null){
-                manager = PermissionManager()
-            }
             when(flag){
-                1 -> manager?.with(context, listOfPermissions, rationaleId, option, handler)
-                2 -> manager?.with(context, listOfPermissions, rationale, null, handler)
-                3 -> manager?.with(context, listOfPermissions, rationale, null, handler)
+                1 -> with(context, listOfPermissions, rationaleId, option, handler)
+                2 -> with(context, listOfPermissions, rationale, null, handler)
+                3 -> with(context, listOfPermissions, rationale, null, handler)
             }
 
         }
