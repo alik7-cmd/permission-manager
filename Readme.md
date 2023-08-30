@@ -42,7 +42,7 @@ private val listOfPermission =
             .onRequestPermission(listOfPermission, null, null,
                 object : PermissionListener() {
                     override fun onGranted() {
-                        openCamera()
+                        //for example open camera
                     }
 
                     override fun onBlocked(
@@ -66,7 +66,7 @@ And if you want to take a single permission use below code
 PermissionManager.Builder(this).onRequestPermission(Manifest.permission.CAMERA, null,
             object : PermissionListener() {
                 override fun onGranted() {
-                    openCamera()
+                    //for example open camera
                 }
 
                 override fun onBlocked(
@@ -98,7 +98,7 @@ PermissionManager.Builder(this)
     .onRequestPermission(listOfPermission, null, option,
         object : PermissionListener() {
             override fun onGranted() {
-                openCamera()
+                //for example open camera
             }
 
             override fun onBlocked(
