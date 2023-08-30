@@ -90,13 +90,8 @@ You can also customize permission request if you want using below code
 private val listOfPermission =
     arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
-val option = Options(
-    "Goto Settings",
-    "Permissions Needed",
-    "Permissions Needed",
-    "Please provide requested permission(s) from settings.",
-    true,
-    false)
+val option = Options("Goto Settings","Permissions Needed","Permissions Needed","Please provide " +
+        "requested permission(s) from settings.",true,false)
 
 PermissionManager.Builder(this)
     .enableLogging(true)
