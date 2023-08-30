@@ -1,7 +1,6 @@
 package com.techascent.example
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.MediaStore
@@ -32,17 +31,6 @@ class HomeActivity : AppCompatActivity() {
                     override fun onGranted() {
                         openCamera()
                     }
-
-                    override fun onBlocked(
-                        context: Context,
-                        listOfBlockedPermission: List<String>
-                    ): Boolean {
-                        return super.onBlocked(context, listOfBlockedPermission)
-                    }
-
-                    override fun onDenied(context: Context, listOfDeniedPermission: List<String>) {
-                        super.onDenied(context, listOfDeniedPermission)
-                    }
                 }).enableLogging(true)
             .build()
     }
@@ -52,17 +40,6 @@ class HomeActivity : AppCompatActivity() {
             object : PermissionListener() {
                 override fun onGranted() {
                     openCamera()
-                }
-
-                override fun onBlocked(
-                    context: Context,
-                    listOfBlockedPermission: List<String>
-                ): Boolean {
-                    return super.onBlocked(context, listOfBlockedPermission)
-                }
-
-                override fun onDenied(context: Context, listOfDeniedPermission: List<String>) {
-                    super.onDenied(context, listOfDeniedPermission)
                 }
             }).enableLogging(true)
             .build()

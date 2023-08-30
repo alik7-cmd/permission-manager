@@ -1,4 +1,4 @@
-# Permission Manager
+# Permission Manager (An Library for Android Runtime Permission)
 
 Android runtime permissions were introduced in Android 6.0. Obviously, it's a good thing to have as
 a user, but this can be a nightmare for the developer if it's not handled properly.
