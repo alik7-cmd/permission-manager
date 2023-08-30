@@ -2,7 +2,6 @@ package com.techascent.permissionmanager
 
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
@@ -13,20 +12,20 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.text.TextUtils
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.ViewModelProvider
 import com.techascent.permissionmanager.PermissionManager.Companion.log
 import java.util.ArrayList
 
 class PermissionActivity : AppCompatActivity() {
-    private var allPermissions: ArrayList<String>? = null
-    private var deniedPermissions: ArrayList<String>? = null
-    private var noRationaleList: ArrayList<String>? = null
-    private var options: Options? = null
+
+    private lateinit var mViewModel: PermissionViewModel
+
     @TargetApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        mViewModel = ViewModelProvider(this)[PermissionViewModel::class.java]
         supportActionBar?.hide()
         supportActionBar?.title = ""
         setFinishOnTouchOutside(false)
@@ -37,32 +36,32 @@ class PermissionActivity : AppCompatActivity() {
             return
         }
 
-        allPermissions = bundle.getStringArrayList(BUNDLE_PERMISSIONS)
-        options = bundle.getParcelable(BUNDLE_MESSAGES)
-        if (options == null) {
-            options = Options()
+        mViewModel.allPermissions = bundle.getStringArrayList(BUNDLE_PERMISSIONS)
+        mViewModel.options = bundle.getParcelable(BUNDLE_MESSAGES)
+        if (mViewModel.options == null) {
+            mViewModel.options = Options()
         }
-        deniedPermissions = ArrayList()
-        noRationaleList = ArrayList()
+        mViewModel.deniedPermissions = ArrayList()
+        mViewModel.noRationaleList = ArrayList()
         var noRationale = true
-        allPermissions?.forEach { permission ->
+        mViewModel.allPermissions?.forEach { permission ->
             if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
-                deniedPermissions!!.add(permission)
+                mViewModel.deniedPermissions!!.add(permission)
                 if (shouldShowRequestPermissionRationale(permission)) {
                     noRationale = false
                 } else {
-                    noRationaleList!!.add(permission)
+                    mViewModel.noRationaleList!!.add(permission)
                 }
             }
         }
-        if (deniedPermissions!!.isEmpty()) {
+        if (mViewModel.deniedPermissions!!.isEmpty()) {
             grant()
             return
         }
         val rationale = bundle.getString(BUNDLE_RATIONALE)
         if (noRationale || TextUtils.isEmpty(rationale)) {
             log("No rationale.")
-            requestPermissions(deniedPermissions?.toTypedArray() ?: emptyArray(), RC_PERMISSION)
+            requestPermissions(mViewModel.deniedPermissions?.toTypedArray() ?: emptyArray(), RC_PERMISSION)
         } else {
             log("Show rationale.")
             showRationale(rationale)
@@ -73,12 +72,12 @@ class PermissionActivity : AppCompatActivity() {
     private fun showRationale(rationale: String?) {
         val listener = DialogInterface.OnClickListener { dialog, which ->
             if (which == DialogInterface.BUTTON_POSITIVE) {
-                requestPermissions(deniedPermissions?.toTypedArray() ?: emptyArray(), RC_PERMISSION)
+                requestPermissions(mViewModel.deniedPermissions?.toTypedArray() ?: emptyArray(), RC_PERMISSION)
             } else {
                 deny()
             }
         }
-        AlertDialog.Builder(this).setTitle(options!!.rationaleDialogTitle)
+        AlertDialog.Builder(this).setTitle(mViewModel.options!!.rationaleDialogTitle)
             .setMessage(rationale)
             .setPositiveButton(R.string.permission_manager_text_ok, listener)
             .setNegativeButton(R.string.permission_manager_text_cancel, listener)
@@ -95,25 +94,25 @@ class PermissionActivity : AppCompatActivity() {
         if (grantResults.isEmpty()) {
             deny()
         } else {
-            deniedPermissions!!.clear()
+            mViewModel.deniedPermissions!!.clear()
             for (i in grantResults.indices) {
                 if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-                    deniedPermissions!!.add(permissions[i])
+                    mViewModel.deniedPermissions!!.add(permissions[i])
                 }
             }
-            if (deniedPermissions!!.size == 0) {
+            if (mViewModel.deniedPermissions!!.size == 0) {
                 log("Just allowed.")
                 grant()
             } else {
                 val blockedList = ArrayList<String>() //set not to ask again.
                 val justBlockedList = ArrayList<String>() //just set not to ask again.
                 val justDeniedList = ArrayList<String>()
-                deniedPermissions?.forEach {permission ->
+                mViewModel.deniedPermissions?.forEach {permission ->
                     if (shouldShowRequestPermissionRationale(permission)) {
                         justDeniedList.add(permission)
                     } else {
                         blockedList.add(permission)
-                        if (!noRationaleList!!.contains(permission)) {
+                        if (!mViewModel.noRationaleList!!.contains(permission)) {
                             justBlockedList.add(permission)
                         }
                     }
@@ -123,7 +122,7 @@ class PermissionActivity : AppCompatActivity() {
                     finish()
                     pelicanPermissionHandler?.onJustBlocked(
                         applicationContext, justBlockedList,
-                        deniedPermissions!!
+                        mViewModel.deniedPermissions!!
                     )
                 } else if (justDeniedList.size > 0) { //clicked deny for at least one.
                     deny()
@@ -141,14 +140,14 @@ class PermissionActivity : AppCompatActivity() {
     }
 
     private fun sendToSettings() {
-        if (!options!!.sendBlockedToSettings) {
+        if (!mViewModel.options!!.sendBlockedToSettings) {
             deny()
             return
         }
         log("Ask to go to settings.")
-        AlertDialog.Builder(this).setTitle(options!!.settingsDialogTitle)
-            .setMessage(options!!.settingsDialogMessage)
-            .setPositiveButton(options!!.settingsText) { _, _ ->
+        AlertDialog.Builder(this).setTitle(mViewModel.options!!.settingsDialogTitle)
+            .setMessage(mViewModel.options!!.settingsDialogMessage)
+            .setPositiveButton(mViewModel.options!!.settingsText) { _, _ ->
                 val intent = Intent(
                     Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                     Uri.fromParts("package", packageName, null)
@@ -160,15 +159,15 @@ class PermissionActivity : AppCompatActivity() {
             .setOnCancelListener { deny() }.create().show()
     }
 
+    @Deprecated("Deprecated in Java")
     @SuppressLint("MissingSuperCall")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RC_SETTINGS && permissionListener != null) {
             PermissionManager().with(
-                this, allPermissions!!.toTypedArray(), null, options,
+                this, mViewModel.allPermissions!!.toTypedArray(), null, mViewModel.options,
                 permissionListener
             )
         }
-        // super, because overridden method will make the handler null, and we don't want that.
         super.finish()
     }
 
@@ -180,7 +179,7 @@ class PermissionActivity : AppCompatActivity() {
     private fun deny() {
         val pelicanPermissionHandler = permissionListener
         finish()
-        pelicanPermissionHandler?.onDenied(applicationContext, deniedPermissions!!)
+        pelicanPermissionHandler?.onDenied(applicationContext, mViewModel.deniedPermissions!!)
     }
 
     private fun grant() {
@@ -191,9 +190,6 @@ class PermissionActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        allPermissions = null
-        deniedPermissions = null
-        noRationaleList = null
     }
 
     companion object {

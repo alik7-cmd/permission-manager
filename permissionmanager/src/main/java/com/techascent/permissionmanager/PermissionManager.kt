@@ -6,7 +6,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
 
-class PermissionManager {
+class PermissionManager internal constructor(){
 
     companion object{
         var isLoggingEnabled = true
@@ -16,18 +16,11 @@ class PermissionManager {
             if (isLoggingEnabled)
                 Log.d("", message)
         }
-
-        @JvmStatic
-        fun disableLogging() {
-            isLoggingEnabled = false
-        }
     }
 
     fun shouldEnableLogging(isEnable : Boolean){
         isLoggingEnabled = isEnable
     }
-
-
 
     /**
      * Check/Request Permissions and triggers the handler method properly.
@@ -155,7 +148,7 @@ class PermissionManager {
         }
     }
 
-    class Builder {
+    class Builder private constructor(){
         private lateinit var context: Context
         private lateinit var listOfPermissions: Array<String>
         private var rationaleId : Int? = null
@@ -168,20 +161,16 @@ class PermissionManager {
         private var flag = -1
         private var isLoggingEnabled = true
 
-        /*companion object{
-            val CREATE: Builder by lazy {
-                Builder()
-            }
-        }*/
+        constructor(withContext: Context) : this(){
+            this.context = withContext
+        }
 
         fun onRequestPermission(
-            context: Context,
             permissions: Array<String>,
             rationaleId: Int?,
             option: Options?,
             handler: PermissionListener
         ): Builder {
-            this.context= context
             this.listOfPermissions= permissions
             this.rationaleId = rationaleId
             this.option= option
@@ -192,12 +181,10 @@ class PermissionManager {
         }
 
         fun onRequestPermission(
-            context: Context,
             permission: String,
             rationaleId: Int,
             handler: PermissionListener
         ): Builder {
-            this.context= context
             this.listOfPermissions= arrayOf(permission)
             this.rationaleId = rationaleId
             this.handler= handler
@@ -207,12 +194,10 @@ class PermissionManager {
         }
 
         fun onRequestPermission(
-            context: Context,
             permission: String,
             rationale: String?,
             handler: PermissionListener
         ): Builder {
-            this.context= context
             this.listOfPermissions= arrayOf(permission)
             this.rationale = rationale
             this.handler= handler

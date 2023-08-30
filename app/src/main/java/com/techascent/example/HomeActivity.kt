@@ -13,7 +13,6 @@ import com.techascent.permissionmanager.PermissionManager
 
 class HomeActivity : AppCompatActivity() {
 
-
     private val listOfPermission =
         arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
@@ -26,12 +25,9 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun takeMultiplePermission() {
-        PermissionManager.Builder()
+        PermissionManager.Builder(this)
             .enableLogging(true)
-            .onRequestPermission(this,
-                listOfPermission,
-                null,
-                null,
+            .onRequestPermission(listOfPermission, null, null,
                 object : PermissionListener() {
                     override fun onGranted() {
                         openCamera()
@@ -47,14 +43,12 @@ class HomeActivity : AppCompatActivity() {
                     override fun onDenied(context: Context, listOfDeniedPermission: List<String>) {
                         super.onDenied(context, listOfDeniedPermission)
                     }
-                }).enableLogging(true).build()
+                }).enableLogging(true)
+            .build()
     }
 
     private fun takeSinglePermission() {
-        PermissionManager.Builder().onRequestPermission(
-            this,
-            Manifest.permission.CAMERA,
-            null,
+        PermissionManager.Builder(this).onRequestPermission(Manifest.permission.CAMERA, null,
             object : PermissionListener() {
                 override fun onGranted() {
                     openCamera()
@@ -70,7 +64,8 @@ class HomeActivity : AppCompatActivity() {
                 override fun onDenied(context: Context, listOfDeniedPermission: List<String>) {
                     super.onDenied(context, listOfDeniedPermission)
                 }
-            }).enableLogging(true).build()
+            }).enableLogging(true)
+            .build()
     }
 
     private fun openCamera() {

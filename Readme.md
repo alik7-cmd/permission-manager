@@ -37,12 +37,9 @@ Pretty easy! Just add below code if you need multiple permissions to ask at the 
 private val listOfPermission = 
         arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
         
-PermissionManager.Builder()
+        PermissionManager.Builder(this)
             .enableLogging(true)
-            .onRequestPermission(this,
-                listOfPermission,
-                null,
-                null,
+            .onRequestPermission(listOfPermission, null, null,
                 object : PermissionListener() {
                     override fun onGranted() {
                         openCamera()
@@ -58,16 +55,15 @@ PermissionManager.Builder()
                     override fun onDenied(context: Context, listOfDeniedPermission: List<String>) {
                         super.onDenied(context, listOfDeniedPermission)
                     }
-                }).enableLogging(true).build()
+                }).enableLogging(true)
+            .build()
+        
 ```
 
 And if you want to take a single permission use below code
 
 ``` kotlin
-PermissionManager.Builder().onRequestPermission(
-            this,
-            Manifest.permission.CAMERA,
-            null,
+PermissionManager.Builder(this).onRequestPermission(Manifest.permission.CAMERA, null,
             object : PermissionListener() {
                 override fun onGranted() {
                     openCamera()
@@ -83,7 +79,8 @@ PermissionManager.Builder().onRequestPermission(
                 override fun onDenied(context: Context, listOfDeniedPermission: List<String>) {
                     super.onDenied(context, listOfDeniedPermission)
                 }
-            }).enableLogging(true).build()
+            }).enableLogging(true)
+            .build()
 ```
 
 You can also customize permission request if you want using below code
@@ -99,14 +96,11 @@ val option = Options(
     "Permissions Needed",
     "Please provide requested permission(s) from settings.",
     true,
-    false
-)
-PermissionManager.Builder()
+    false)
+
+PermissionManager.Builder(this)
     .enableLogging(true)
-    .onRequestPermission(this,
-        listOfPermission,
-        null,
-        option,
+    .onRequestPermission(listOfPermission, null, option,
         object : PermissionListener() {
             override fun onGranted() {
                 openCamera()
@@ -122,7 +116,10 @@ PermissionManager.Builder()
             override fun onDenied(context: Context, listOfDeniedPermission: List<String>) {
                 super.onDenied(context, listOfDeniedPermission)
             }
-        }).enableLogging(true).build()
+        }).enableLogging(true)
+    .build()
+
+
 ```
 
 HOLA!! It's too easy to use and saves you to write from a lot of boilerplate codes. So enjoy.  
