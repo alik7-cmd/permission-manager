@@ -122,4 +122,29 @@ PermissionManager.Builder(this)
 
 ```
 
-HOLA!! It's too easy to use and saves you to write from a lot of boilerplate codes. So enjoy.  
+## What this library offers :
+
+- Very simple to use, and implementing it just requires a small   amount of code.
+- Can request single or multiple permissions at the same time.
+- Compact (10-15KB).
+- Can handle the permission blocked case.
+- Highly customizable.
+- Dark Mode supported.
+
+## License
+
+```
+Copyright (C), Permission Manager Library
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
