@@ -1,4 +1,4 @@
-# Permission Manager (An Library for Android Runtime Permission)
+# Permission Manager (Android Runtime Permission)
 
 Android runtime permissions were introduced in Android 6.0. Obviously, it's a good thing to have as
 a user, but this can be a nightmare for the developer if it's not handled properly.
@@ -6,7 +6,7 @@ This library reduces the complexity of handling repetitive or multiple permissio
 
 ## Step 1:
 
-Add the JitPack repository to your build.gradle/settings.gradle file
+Add the JitPack repository to your **build.gradle/settings.gradle** file
 
 ```groovy
 allprojects {
@@ -19,11 +19,11 @@ allprojects {
 
 ## Step 2:
 
-Add the dependency
+Add the permission manager dependency
 
 ```groovy
 dependencies {
-    implementation 'com.github.alik7-cmd:permission-manager:1.3.0'
+    implementation 'com.github.alik7-cmd:permission-manager:1.3.2'
 }
 ```
 
@@ -33,7 +33,7 @@ That's it! You are all set to use the library.
 
 Pretty easy! Just add below code if you need multiple permissions to ask at the same time.
 
-``` kotlin
+```kotlin
 private val listOfPermission = 
         arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
         
@@ -62,7 +62,7 @@ private val listOfPermission =
 
 And if you want to take a single permission use below code
 
-``` kotlin
+```kotlin
 PermissionManager.Builder(this).onRequestPermission(Manifest.permission.CAMERA, null,
             object : PermissionListener() {
                 override fun onGranted() {
@@ -134,7 +134,7 @@ PermissionManager.Builder(this)
 ## License
 
 ```
-Copyright (C), Permission Manager Library
+Copyright (c) 2018 KH Rafiquel Islam
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
