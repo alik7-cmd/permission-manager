@@ -4,6 +4,9 @@ Android runtime permissions were introduced in Android 6.0. Obviously, it's a go
 a user, but this can be a nightmare for the developer if it's not handled properly.
 This library reduces the complexity of handling repetitive or multiple permissions at runtime.
 
+<img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdzM5bnpwN2JhNjMwNDBha3VydzJsZXpqd29hcjBsNms4MmM1amZoMyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/FuUn6SEbbBoeqkjxlD/giphy.gif" width="300">
+
+
 ## Step 1:
 
 Add the JitPack repository to your **build.gradle/settings.gradle** file
@@ -60,7 +63,7 @@ private val listOfPermission =
         
 ```
 
-And if you want to take a single permission use below code
+And if you want to take a single permission use below code:
 
 ```kotlin
 PermissionManager.Builder(this).onRequestPermission(Manifest.permission.CAMERA, null,
