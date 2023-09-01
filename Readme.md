@@ -26,7 +26,7 @@ Add the permission manager dependency
 
 ```groovy
 dependencies {
-    implementation 'com.github.alik7-cmd:permission-manager:1.3.2'
+    implementation 'com.github.alik7-cmd:permission-manager:1.3.3'
 }
 ```
 
