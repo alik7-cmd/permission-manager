@@ -188,10 +188,6 @@ class PermissionActivity : AppCompatActivity() {
         pelicanPermissionHandler?.onGranted()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-
     companion object {
         private const val RC_SETTINGS = 5599
         private const val RC_PERMISSION = 5717

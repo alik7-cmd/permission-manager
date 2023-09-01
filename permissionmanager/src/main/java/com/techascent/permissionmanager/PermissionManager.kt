@@ -6,7 +6,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
 
-class PermissionManager{
+class PermissionManager internal constructor() {
 
     companion object{
         var isLoggingEnabled = true
