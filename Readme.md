@@ -24,9 +24,12 @@ allprojects {
 
 Add the permission manager dependency
 
+[![](https://jitpack.io/v/alik7-cmd/permission-manager.svg)](https://jitpack.io/#alik7-cmd/permission-manager)
+
+
 ```gradle
 dependencies {
-    implementation 'com.github.alik7-cmd:permission-manager:1.3.3'
+    implementation 'com.github.alik7-cmd:permission-manager:<version>'
 }
 ```
 
