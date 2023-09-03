@@ -9,9 +9,9 @@ This library reduces the complexity of handling repetitive or multiple permissio
 
 ## Step 1:
 
-Add the JitPack repository to your **build.gradle/settings.gradle** file
+Add the JitPack repository to your `build.gradle` or `settings.gradle` file
 
-```groovy
+```gradle
 allprojects {
     repositories {
         ...
@@ -24,7 +24,7 @@ allprojects {
 
 Add the permission manager dependency
 
-```groovy
+```gradle
 dependencies {
     implementation 'com.github.alik7-cmd:permission-manager:1.3.3'
 }
@@ -131,7 +131,7 @@ PermissionManager.Builder(this)
 
 ## License
 
-```
+```xml
 Copyright (c) 2023 KH Rafiquel Islam
 
 Licensed under the Apache License, Version 2.0 (the "License");
