@@ -31,18 +31,17 @@ class HomeActivity : AppCompatActivity() {
                     override fun onGranted() {
                         openCamera()
                     }
-                }).enableLogging(true)
-            .build()
+                }).build()
     }
 
     private fun takeSinglePermission() {
-        PermissionManager.Builder(this).onRequestPermission(Manifest.permission.CAMERA, null,
+        PermissionManager.Builder(this)
+            .onRequestPermission(Manifest.permission.CAMERA, null,
             object : PermissionListener() {
                 override fun onGranted() {
                     openCamera()
                 }
-            }).enableLogging(true)
-            .build()
+            }).build()
     }
 
     private fun openCamera() {

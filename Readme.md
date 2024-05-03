@@ -61,8 +61,7 @@ private val listOfPermission =
                     override fun onDenied(context: Context, listOfDeniedPermission: List<String>) {
                         super.onDenied(context, listOfDeniedPermission)
                     }
-                }).enableLogging(true)
-            .build()
+                }).build()
         
 ```
 
@@ -85,8 +84,7 @@ PermissionManager.Builder(this).onRequestPermission(Manifest.permission.CAMERA, 
                 override fun onDenied(context: Context, listOfDeniedPermission: List<String>) {
                     super.onDenied(context, listOfDeniedPermission)
                 }
-            }).enableLogging(true)
-            .build()
+            }).build()
 ```
 
 You can also customize permission request if you want using below code
@@ -117,8 +115,7 @@ PermissionManager.Builder(this)
             override fun onDenied(context: Context, listOfDeniedPermission: List<String>) {
                 super.onDenied(context, listOfDeniedPermission)
             }
-        }).enableLogging(true)
-    .build()
+        }).build()
 
 
 ```
@@ -127,7 +124,7 @@ PermissionManager.Builder(this)
 
 - Very simple to use, and implementing it just requires a small   amount of code.
 - Can request single or multiple permissions at the same time.
-- Compact (10-15KB).
+- Compact size (10-15KB).
 - Can handle the permission blocked case.
 - Highly customizable.
 - Dark Mode supported.
